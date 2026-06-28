@@ -56,6 +56,7 @@ function parseArgs(argv) {
     if (a === '--in') args.in = argv[++i];
     else if (a === '--instruction') args.instruction = argv[++i];
     else if (a === '--out') args.out = argv[++i];
+    else if (a === '--ref') args.ref = argv[++i];
   }
   return args;
 }
@@ -95,15 +96,29 @@ async function main() {
   const inMime = mimeFor(inPath);
   const data = fs.readFileSync(inPath).toString('base64');
 
+  // 선택: 제품 레퍼런스 이미지를 함께 넣어 편집 중 제품 형태·비율·부품 배치가 어긋나지 않게 고정한다.
+  let refPart = null;
+  let refNote = '';
+  if (args.ref) {
+    const refPath = path.resolve(PROJECT_ROOT, args.ref);
+    if (!fs.existsSync(refPath)) fail(`레퍼런스 이미지를 찾을 수 없습니다: ${refPath}`);
+    refPart = { inlineData: { mimeType: mimeFor(refPath), data: fs.readFileSync(refPath).toString('base64') } };
+    refNote =
+      ' A SECOND image is provided purely as the product reference: the fixture in the edited photo must match ' +
+      "that reference's EXACT shape, proportions, aspect ratio and part/tile layout — do not simplify, " +
+      'rearrange, stretch or squash the product. Only its size in the scene and the requested change may differ.';
+  }
+
   // 국소 편집: 지시한 부분만 바꾸고 나머지는 픽셀 단위로 보존하도록 강하게 못 박는다.
   const prompt =
-    'Edit the provided image in place. Make ONLY this change: ' +
+    'Edit the FIRST image in place. Make ONLY this change: ' +
     `${args.instruction}. ` +
-    'Keep EVERYTHING else in the image exactly identical — the same composition, framing, camera angle, ' +
-    'lighting, colours, the product/fixture and all other objects, props, furniture, textures and background ' +
+    'Keep EVERYTHING else in that image exactly identical — the same composition, framing, camera angle, ' +
+    'lighting, colours, and all other objects, props, furniture, textures and background ' +
     'must stay pixel-for-pixel the same. This is a localized edit / inpaint, NOT a re-generation: do not ' +
     'restyle, recolour, re-light, re-frame or move anything other than what is asked. Where something is ' +
-    'removed, fill the area so it blends seamlessly and naturally with the surrounding scene.';
+    'removed or resized, fill the area so it blends seamlessly and naturally with the surrounding scene.' +
+    refNote;
 
   console.log(`\n● 이미지 편집`);
   console.log(`  입력: ${path.relative(PROJECT_ROOT, inPath)}`);
@@ -113,6 +128,7 @@ async function main() {
     model: 'gemini-3.1-flash-image-preview',
     contents: [
       { inlineData: { mimeType: inMime, data } },
+      ...(refPart ? [refPart] : []),
       { text: prompt },
     ],
     config: {

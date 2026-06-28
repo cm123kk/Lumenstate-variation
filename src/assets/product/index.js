@@ -54,6 +54,13 @@ import product13_var3 from './variations/13/13-detail-crop.jpg';
 import product13_var4 from './variations/13/13-angle-low-night.jpg';
 import product13_var5 from './variations/13/13-lifestyle-person.jpg';
 
+// Product 15 variation cuts (skill: lumenstate-product-variation, image-to-image from 15.png)
+import product15_var1 from './variations/15/15-room-wide-day.jpg';
+import product15_var2 from './variations/15/15-room-front-lit.jpg';
+import product15_var3 from './variations/15/15-detail-crop.jpg';
+import product15_var4 from './variations/15/15-angle-low-night.jpg';
+import product15_var5 from './variations/15/15-lifestyle-person.jpg';
+
 // Export organized by product
 export const productAssets = {
   1: { images: [product1, product1_1] },
@@ -88,7 +95,16 @@ export const productAssets = {
     ],
   },
   14: { images: [product14, product14_1] },
-  15: { images: [product15, product15_1] },
+  15: {
+    images: [product15, product15_1],
+    variations: [
+      product15_var1,
+      product15_var2,
+      product15_var3,
+      product15_var4,
+      product15_var5,
+    ],
+  },
   16: { images: [product16, product16_1] },
   17: { images: [product17, product17_1] },
   18: { images: [product18, product18_1] },

@@ -1,0 +1,114 @@
+import { forwardRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
+import { SectionContainer } from "../container/SectionContainer";
+import { ProductGallery } from "./ProductGallery";
+
+import { useTimeline, TIMELINE_TRANSITION } from "../media/useTimeline";
+import { products } from "../../data/products";
+import { content } from "../../data/content";
+import RandomRevealText from "../kinetic-typography/RandomRevealText";
+
+/**
+ * ProductShowcase 섹션 컴포넌트
+ *
+ * TimelineSlider와 ProductGallery(필터 + 그리드)를 연동한 제품 쇼케이스 섹션.
+ * 전역 TimelineContext를 사용하여 시간대별 제품 이미지 전환.
+ *
+ * 동작 방식:
+ * 1. TimelineSlider로 시간대 조절 (12pm, 4pm, 8pm, 12am)
+ * 2. ProductGallery에서 제품 타입별 필터링
+ * 3. 선택된 시간대에 따라 모든 ProductCard 이미지 동기화
+ * 4. timeline >= 0.5 시 다크 모드 자동 전환
+ *
+ * Props:
+ * @param {number} columns - 그리드 열 수 [Optional, 기본값: 4]
+ * @param {function} onProductClick - 제품 클릭 핸들러 [Optional]
+ * @param {object} sx - 추가 스타일 [Optional]
+ *
+ * Example usage:
+ * <TimelineProvider>
+ *   <ProductShowcase columns={4} />
+ * </TimelineProvider>
+ */
+const ProductShowcase = forwardRef(function ProductShowcase(
+	{ columns = 4, onProductClick, sx, ...props },
+	ref
+) {
+	const navigate = useNavigate();
+	const { timeline } = useTimeline();
+	const { sectionTitle, sectionSubtitle } = content.products;
+
+	/**
+	 * 제품 클릭 핸들러
+	 * 제품 상세 페이지로 라우팅
+	 */
+	const handleProductClick = useCallback(
+		(product) => {
+			if (onProductClick) {
+				onProductClick(product);
+			}
+			navigate(`/product/${product.id}`);
+		},
+		[navigate, onProductClick]
+	);
+
+	return (
+		<SectionContainer
+			ref={ref}
+			maxWidth={false}
+			sx={{ px: { xs: 2, sm: 3, md: 4 }, pt: { xs: 10, md: 24 }, ...sx }}
+			{...props}
+		>
+			{/* 헤더 영역 */}
+			<Box sx={{ textAlign: "center", }}>
+				<Typography
+					variant="h4"
+					component="h2"
+					sx={{
+						fontWeight: 700,
+						mb: 1,
+						color: "text.primary",
+						transition: `color ${TIMELINE_TRANSITION.css}`,
+					}}
+				>
+					<RandomRevealText
+						text={sectionTitle}
+						trigger="inview"
+						delay={0}
+						stagger={50}
+					/>
+				</Typography>
+				<Typography
+					variant="body1"
+					component="p"
+					sx={{
+						mb: 8,
+						color: "text.secondary",
+						transition: `color ${TIMELINE_TRANSITION.css}`,
+					}}
+				>
+					<RandomRevealText
+						text={sectionSubtitle}
+						trigger="inview"
+						delay={Math.min(sectionTitle.length * 50, 800) + 150}
+						stagger={30}
+					/>
+				</Typography>
+			</Box>
+
+			{/* ProductGallery (필터 + 그리드) */}
+			<ProductGallery
+				products={products}
+				timeline={timeline}
+				columns={columns}
+				onProductClick={handleProductClick}
+			/>
+		</SectionContainer>
+	);
+});
+
+export { ProductShowcase };
+export default ProductShowcase;

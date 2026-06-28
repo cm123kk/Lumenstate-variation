@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Lumenstate Brand: Warm Black background, Wall Tint White L (Tiempos-style slab serif) -->
+  <rect width="32" height="32" fill="#12100E"/>
+  <g fill="#E8E5E1">
+    <!-- Top serif (slab) -->
+    <rect x="5" y="4" width="10" height="2"/>
+    <!-- Vertical stem -->
+    <rect x="8" y="4" width="4" height="22"/>
+    <!-- Horizontal stroke (foot) -->
+    <rect x="8" y="24" width="19" height="3"/>
+    <!-- Right serif tick on horizontal -->
+    <rect x="25" y="22" width="2" height="2"/>
+  </g>
+</svg>

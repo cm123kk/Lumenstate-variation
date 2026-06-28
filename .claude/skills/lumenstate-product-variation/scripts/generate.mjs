@@ -197,11 +197,13 @@ const CUT_RECIPES = [
       '— a genuine left three-quarter, NOT a flat head-on view. The fixture must look meaningfully rotated from ' +
       'the other cuts (do not show the same face/angle every time)',
     view:
-      'a wide establishing shot of the whole room with the fixture seen in full within the space, plenty of ' +
-      'architecture and negative space around it. Compose so the pale fixture reads clearly as the quiet subject ' +
-      'with soft figure-ground contrast against the surface behind it — never let a white / pale fixture blend ' +
-      'into a same-tone background; give it a deliberate, legible placement as the obvious subject',
-    zoom: 'wide, the fixture occupying only a modest part of the frame',
+      'a striking wide editorial establishing shot with real architectural character and DEPTH — not a flat ' +
+      'product-on-furniture shot. Build a strong sense of place and visual interest: raking natural light and ' +
+      'soft shadow play across textured plaster, a doorway / window / archway framing the view, and layered ' +
+      'foreground and background so the eye travels through the space. Compose so the pale fixture reads clearly ' +
+      'as the quiet subject with soft figure-ground contrast against the surface behind it — never let a white / ' +
+      'pale fixture blend into a same-tone background; give it a deliberate, legible placement as the obvious subject',
+    zoom: 'wide, the fixture occupying only a modest part of the frame, but the composition itself characterful and editorial',
     lit: false,
     light: 'soft warm daylight with gentle ambient warmth (calm and inviting, never flat or clinical), the fixture unlit / off while the room glows with quiet natural light',
   },

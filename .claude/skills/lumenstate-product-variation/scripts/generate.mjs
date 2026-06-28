@@ -202,8 +202,11 @@ const CUT_RECIPES = [
       'soft shadow play across textured plaster, a doorway / window / archway framing the view, and layered ' +
       'foreground and background so the eye travels through the space. Compose so the pale fixture reads clearly ' +
       'as the quiet subject with soft figure-ground contrast against the surface behind it — never let a white / ' +
-      'pale fixture blend into a same-tone background; give it a deliberate, legible placement as the obvious subject',
-    zoom: 'wide, the fixture occupying only a modest part of the frame, but the composition itself characterful and editorial',
+      'pale fixture blend into a same-tone background; give it a deliberate, legible placement as the obvious ' +
+      'subject. The fixture sits as a modest, believably-sized object at a natural real-world scale — small ' +
+      'relative to the furniture and nearby objects, with generous surface and space around it; it must NOT be ' +
+      'oversized or tower over the furniture',
+    zoom: 'wide, the fixture small and occupying only a modest part of the frame, the composition itself characterful and editorial',
     lit: false,
     light: 'soft warm daylight with gentle ambient warmth (calm and inviting, never flat or clinical), the fixture unlit / off while the room glows with quiet natural light',
   },
@@ -221,13 +224,16 @@ const CUT_RECIPES = [
     bg: 2,
     camera: 'a near-front-on vantage matching the reference, only very slightly angled if at all',
     view:
-      'a close-up product-detail shot of the WHOLE small fixture — do NOT crop it down to just a few tiles, and ' +
-      'do not let it fill the frame like a big panel. The entire little lamp sits in the frame with a small ' +
-      'everyday object beside it for scale (that object should look large next to it), the camera close enough to reveal the ' +
-      'matte-black rounded frames and the soft glowing panels. Keep every tile/module\'s shape, proportion and ' +
-      'arrangement EXACTLY as in the reference — do not re-pose, rearrange, resize, straighten, duplicate or ' +
-      'reinvent any part. Shallow depth of field, the room soft behind. ONE continuous frame, never a collage or grid',
-    zoom: 'a close detail shot — the whole small fixture and a mug for scale both in frame, shallow depth of field',
+      'a tight, deliberate MACRO detail crop of the fixture\'s glowing light surface — fill the frame with its ' +
+      'softly lit diffuser(s) and the matte-black frame / edge detail between and around them, a clean editorial ' +
+      'close-up that reads as a study of the warm light itself. NO scale object in frame. The fixture is cropped ' +
+      'on purpose and extends beyond the frame, but compose the crop INTENTIONALLY and CLEANLY — balanced and ' +
+      'squared to the form, the framing edges running parallel to the fixture\'s own lines; it must look like a ' +
+      'deliberate editorial crop, NOT an awkward, tilted or lopsided slice that leaves parts half-cut and ' +
+      'dangling unevenly at the corners. Keep every part\'s shape, proportion and arrangement EXACTLY as in the ' +
+      'reference (just much closer) — do not re-pose, rearrange, resize, straighten, duplicate or reinvent any ' +
+      'part. Shallow depth of field, the room soft behind. ONE continuous frame, never a collage or grid',
+    zoom: 'a tight macro close-up that fills the frame with the glowing diffuser surface and frame detail, shallow depth of field, no scale object',
     lit: true,
     light: 'the fixture\'s own panels softly glowing in the brand warm-neutral tone — a gentle ambient warmth with no harsh bloom — revealing the surface and finish',
   },
@@ -240,8 +246,11 @@ const CUT_RECIPES = [
       'the fixture small in the frame',
     view:
       'a gentle off-axis / oblique angle on the fixture as installed (a soft low or three-quarter vantage), the ' +
-      'fixture still clearly readable in its true form — not a steep dramatic distortion',
-    zoom: 'medium-wide, ambient interior context',
+      'fixture still clearly readable in its true form — not a steep dramatic distortion. The fixture sits as a ' +
+      'modest, believably-sized object on its surface with generous empty surface and room around it — it must ' +
+      'NOT be oversized or fill much of the frame; render it small-to-medium in the scene at a natural real-world ' +
+      'scale relative to the furniture and nearby objects',
+    zoom: 'wide / medium-wide, the fixture small in the frame with plenty of ambient interior context around it',
     lit: true,
     light:
       'night, the fixture\'s panels glowing a WARM, cozy amber-white (the brand warm tone — clearly warm and ' +

@@ -268,17 +268,15 @@ const CUT_RECIPES = [
       'frontal three-quarter than the left/right cuts), so across the set the lamp is seen from clearly ' +
       'different sides — never the same orientation every time',
     view:
-      'ONE single cohesive photograph — NEVER a diptych, split-screen, collage or two side-by-side panels. ' +
-      'The lit fixture is the focal point — but ONLY through composition and its warm glow, by placing it ' +
-      'closer to camera in the foreground and letting the light draw the eye FIRST. CRITICAL: the fixture must ' +
-      'stay at its believable, true-to-life real-world size relative to the person and furniture (matching its ' +
-      'real scale from the reference) — do NOT enlarge, inflate or oversize it, and it must never look bigger ' +
-      'than it realistically is or tower over the seated person; a viewer should read its size as completely ' +
-      'natural next to the sofa, chair and people. In the same room a person sits quietly reading at ease, a ' +
-      'calm secondary presence, not dominating the frame. When the face is visible it is in sharp focus, a real ' +
-      'fully-detailed human face, ABSOLUTELY NO blurring, smudging or pixelation. Candid, unforced, editorial; ' +
-      'light is the subject, the person is quiet ambience',
-    zoom: 'the fixture placed prominently in the foreground at its natural real-world size (not enlarged), the seated person a smaller secondary element further back, one single frame, the person not looking at the camera. Compose the lamp and the person as ONE balanced, cohesive vignette sharing the same space — do NOT leave a large empty dead gap between them or isolate the lamp alone at the far edge',
+      'ONE single cohesive photograph — NEVER a diptych, split-screen or collage, and EXACTLY ONE lamp in the ' +
+      'frame (never duplicate or mirror the fixture). The small lit lamp sits naturally on the surface as part ' +
+      'of a lived-in scene; its warm glow sets the mood, but it is clearly a SMALL tabletop object — do NOT ' +
+      'place it as a big foreground hero, do not enlarge or inflate it, and it must read FAR smaller than the ' +
+      'seated person (well under their chest height). A person sits quietly reading at ease nearby, a calm ' +
+      'presence; compose the lamp and the person as ONE balanced, cohesive vignette sharing the same space — no ' +
+      'large empty dead gap, the lamp not isolated at the far edge. When the face is visible it is in sharp ' +
+      'focus, a real fully-detailed human face, ABSOLUTELY NO blurring, smudging or pixelation. Candid, unforced, editorial',
+    zoom: 'medium-wide, the small lamp occupying only a modest part of the frame with the person and room around it, one single frame, the person not looking at the camera',
     lit: true,
     light:
       'evening, the fixture\'s panels glowing a WARM, cozy amber-white (clearly warm and inviting, NOT cool or ' +

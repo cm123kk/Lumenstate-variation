@@ -269,9 +269,11 @@ const CUT_RECIPES = [
       'calm secondary presence, not dominating the frame. When the face is visible it is in sharp focus, a real ' +
       'fully-detailed human face, ABSOLUTELY NO blurring, smudging or pixelation. Candid, unforced, editorial; ' +
       'light is the subject, the person is quiet ambience',
-    zoom: 'the fixture placed prominently in the foreground at its natural real-world size (not enlarged), the seated person a smaller secondary element further back, one single frame, the person not looking at the camera',
+    zoom: 'the fixture placed prominently in the foreground at its natural real-world size (not enlarged), the seated person a smaller secondary element further back, one single frame, the person not looking at the camera. Compose the lamp and the person as ONE balanced, cohesive vignette sharing the same space — do NOT leave a large empty dead gap between them or isolate the lamp alone at the far edge',
     lit: true,
-    light: 'evening, the fixture switched on and glowing warm for a cozy lived-in mood',
+    light:
+      'evening, the fixture\'s panels glowing a WARM, cozy amber-white (clearly warm and inviting, NOT cool or ' +
+      'plain white), casting a soft warm glow for a cozy lived-in mood',
   },
 ];
 

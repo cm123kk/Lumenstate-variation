@@ -4,22 +4,22 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Lumenstate — Product Variation Skill
 
-> 제품 상세페이지의 **베리에이션 컷(메인 이미지 아래 갤러리 썸네일)** 을 일관된 브랜드 톤으로 자동 생성하는 도메인 한정 스킬.
+> 제품 상세페이지의 **베리에이션 컷(대표 사진 아래 갤러리 썸네일)** 을 자동 생성하는 도메인 한정 스킬.
 > 위치: `.claude/skills/lumenstate-product-variation/`
 
 ---
 
 ## 한 줄 정의
 
-`src/data/products.js` 의 제품 1종 + 재료 옵션을 받아, **동일 제품**을 **각도 · 줌 · 디테일 크롭**으로 변주하고 그 변주를 **빛의 연속성(주간 → 야간 점등)** 타임라인 위에 배치해 N장을 생성한다. 모든 컷은 **동일 카메라 · 동일 브랜드 톤 · 고정 재료**를 공유한다. 렌더는 Gemini(Nano Banana 2) 이미지 모델이 담당한다.
+상세페이지에 등록된 **대표 이미지 `src/assets/product/{id}.png`(낮·소등)** 를 Gemini(Nano Banana 2)에 **레퍼런스로 전달하는 image-to-image** 방식으로, 대표 사진과 **100% 동일한 제품**을 유지한 채 그 제품을 **실제 인테리어 공간**(`product.type` 매핑)에 배치하고 **각도 · 줌 · 디테일 크롭**으로 변주해 N장 생성한다. off↔on 점등 연속성을 베이스로 깔고, 컷들은 **항상 병렬로** 생성한다.
 
-> 메인 hero 컷(`src/assets/product/{id}.png`)은 이미 존재하므로 **이 스킬은 hero를 만들지 않는다.** 갤러리에 깔리는 보조 컷만 생성한다.
+> **두 축을 동시에 만족시킨다:** ① 제품은 텍스트로 그리지 않고 레퍼런스 PNG 로 고정(그래야 대표 사진과 같은 제품) ② 단색 스튜디오가 아니라 인테리어에 배치(그래야 실제 배치 감각). 하나라도 어기면 — 텍스트로 그리면 다른 제품, 단색 배경이면 카탈로그 컷 — 갤러리 의도가 깨진다.
 
 ---
 
 ## 언제 발동하는가
 
-사용자가 **Lumenstate 제품 베리에이션 / 상세 갤러리 컷 / 베리에이션 썸네일 생성**을 말하거나, products.js 의 제품을 브랜드 톤 이미지로 만들어 달라고 할 때. `Lumenstate`, `베리에이션`, `제품 컷`, `Nano Banana`, `gemini image` 키워드가 트리거. **Lumenstate 도메인 전용**이며 임의 이미지 생성·일반 목업과 구분된다.
+**Lumenstate 제품 베리에이션 / 상세 갤러리 컷 / 베리에이션 썸네일 생성**, 또는 products.js 제품을 대표 사진 기준으로 변주해 달라는 요청. `Lumenstate`, `베리에이션`, `제품 컷`, `Nano Banana`, `gemini image` 키워드가 트리거. **도메인 전용**이며 임의 이미지 생성과 구분된다.
 
 ---
 
@@ -27,13 +27,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ```
 .claude/skills/lumenstate-product-variation/
-├── SKILL.md                      # 워크플로우 · 트리거 · 5요소 템플릿 골격
+├── SKILL.md                      # 워크플로우 · 트리거 · 핵심 원칙
 ├── scripts/
-│   └── generate.mjs              # @google/genai 호출, N장 일괄 생성·저장
+│   └── generate.mjs              # 레퍼런스 PNG + 변주 지시 → Gemini 병렬 호출
 └── references/
-    ├── prompt-template.md        # 5요소 템플릿 전문 + 컷 레시피 + 톤 어휘집
-    ├── space-mapping.md          # product.type → 공간 컨텍스트 매핑표
-    └── lighting-mapping.md       # kelvin/lux/lightPattern → 시각 언어 변환표
+    ├── prompt-template.md        # 변주 지시 5블록 + 컷 레시피
+    ├── space-mapping.md          # product.type → 인테리어 공간
+    └── lighting-mapping.md       # kelvin → 점등 색온도
 ```
 
 <table>
@@ -41,140 +41,135 @@ import { Meta } from '@storybook/addon-docs/blocks';
     <tr><th>리소스</th><th>역할</th><th>핵심</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>SKILL.md</code></td><td>진입점 · 워크플로우</td><td>트리거, 입력, 단계, 실패 모드</td></tr>
-    <tr><td><code>scripts/generate.mjs</code></td><td>실제 동작</td><td>products.js 파싱 → 프롬프트 조립 → Gemini 호출 → 저장. <strong>공통 톤 블록을 상수로 고정</strong></td></tr>
-    <tr><td><code>references/*.md</code></td><td>근거 · 설명</td><td>스크립트 상수와 <strong>짝</strong>을 이룸. 톤·매핑 수정 시 양쪽을 함께 고친다</td></tr>
+    <tr><td><code>SKILL.md</code></td><td>진입점 · 워크플로우</td><td>image-to-image + 인테리어 배치 원칙, 병렬 전제, 실패 모드</td></tr>
+    <tr><td><code>scripts/generate.mjs</code></td><td>실제 동작</td><td>레퍼런스 PNG 로드 → 변주 지시 조립 → <strong>Promise.all 병렬 생성</strong> → 저장</td></tr>
+    <tr><td><code>references/*.md</code></td><td>근거 · 설명</td><td>스크립트 상수와 짝. 수정 시 양쪽을 함께 고친다</td></tr>
   </tbody>
 </table>
 
-> 설계 의도: 톤 일관성의 핵심인 `[Style]` 과 카메라 설정을 스크립트 상수로 **고정**하고, 변하는 축(컷 프레이밍·점등 상태·시간대)만 델타로 주입한다. 매번 모델에게 톤을 다시 설명하면 컷마다 분위기가 미세하게 어긋나기 때문이다.
-
 ---
 
-## 6 설계 기준
+## 핵심 원칙
 
-1. **톤** — warm minimal, ambient warmth (03 Visual Direction 의 flat & quiet 계승)
-2. **베리에이션 축** — 컷 종류(각도·줌) / 점등 상태 / 공간 컨텍스트
-3. **베이스** — eye-level 3/4 view, rule-of-thirds (카메라 고정)
-4. **조명** — `kelvin`→색온도, `lux`→광량, `lightPattern`→빛 확산 형태 시각화
-5. **공간** — `product.type` 자동 매핑 (CEILING→거실/다이닝, STAND→거실 코너, WALL→복도/침실 벽, DESK→책상)
-6. **템플릿** — 5요소 `[Style][Subject][Setting][Action][Composition]`
+1. **레퍼런스 이미지가 제품을 정의한다.** `src/assets/product/{id}.png`(낮·소등 대표샷)를 입력하고 형태·비율·색·재질·마감을 **100% 동일**하게 유지. 재설계·부품 추가 금지.
+2. **그 제품을 실제 인테리어에 배치한다.** 단색 스튜디오가 아니라 `product.type` 에 맞는 공간(CEILING→거실/다이닝 천장 매입 등)에 실제 설치된 모습으로.
+3. **변하는 건 카메라·점등뿐.** 각도 · 줌 · 디테일 크롭 + off/on. 제품 자체는 모든 컷에서 같다.
+4. **빛의 연속성.** `{id}.png`(소등·밝은 공간) ↔ `{id}-1.png`(점등·어두운 공간 글로우)를 따라 off↔on 배치.
+5. **병렬 전제.** 컷은 독립적 → `Promise.all` 로 항상 동시 생성(한 컷 실패해도 나머지 계속).
 
 ---
 
 ## 입력
-
-참조 필드: `type`, `form`, `lightPattern`, `lux`, `kelvin` (+ `glassFinish`·`hardware` 는 인자로 받아 **고정**).
 
 <table>
   <thead>
     <tr><th>인자</th><th>필수</th><th>기본값</th><th>설명</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>--product &lt;id&gt;</code></td><td>✅</td><td>—</td><td>products.js 의 제품 id (1~20)</td></tr>
-    <tr><td><code>--glass &lt;value&gt;</code></td><td></td><td><code>opaline</code></td><td>glassFinish — <strong>호출 내 고정</strong></td></tr>
-    <tr><td><code>--hardware &lt;value&gt;</code></td><td></td><td><code>patina-brass</code></td><td>hardware — <strong>호출 내 고정</strong></td></tr>
+    <tr><td><code>--product &lt;id&gt;</code></td><td>✅</td><td>—</td><td>products.js id (1~20). <code>src/assets/product/&#123;id&#125;.png</code> 가 레퍼런스</td></tr>
     <tr><td><code>--count &lt;N&gt;</code></td><td></td><td><code>4</code></td><td>생성 컷 수</td></tr>
     <tr><td><code>--out &lt;dir&gt;</code></td><td></td><td><code>generated/lumenstate/&#123;id&#125;</code></td><td>출력 디렉토리</td></tr>
     <tr><td><code>--dry-run</code></td><td></td><td>off</td><td>API 호출 없이 프롬프트만 출력</td></tr>
   </tbody>
 </table>
 
-> **재료를 고정하는 이유:** glassFinish·hardware 는 제품 객체에 값이 없고 `PRODUCT_OPTIONS` 의 선택지로만 존재한다(상세 템플릿 기본값 = `opaline` + `patina-brass`). 컷마다 재료가 흔들리면 "같은 제품의 다른 컷"이 아니라 "다른 제품"이 된다.
+> 재료 옵션(`--glass`/`--hardware`)은 받지 않는다 — 외형은 레퍼런스가 정의한다. products.js 에서 참조하는 필드는 공간 매핑용 `type` 과 점등 색온도용 `kelvin`.
 
 ---
 
-## 베리에이션 매트릭스 (hero 제외 · 빛의 연속성 베이스)
+## 베리에이션 매트릭스 (인테리어 컨텍스트 · 각도·줌·디테일 크롭 · off↔on)
 
 <table>
   <thead>
-    <tr><th>#</th><th>slug</th><th>컷 (각도 / 줌)</th><th>점등 상태</th><th>시간대</th></tr>
+    <tr><th>#</th><th>slug</th><th>변주 (각도/줌/크롭)</th><th>점등</th><th>공간·시간</th></tr>
   </thead>
   <tbody>
-    <tr><td>1</td><td><code>angle-offdim</code></td><td>3/4 미드샷, 전체 폼 / medium-wide</td><td>off, 잔열 미광</td><td>늦은 오후</td></tr>
-    <tr><td>2</td><td><code>front-glow</code></td><td>정면 미디엄, 발광면 / medium</td><td>on 작업 밝기, lightPattern 또렷</td><td>블루아워</td></tr>
-    <tr><td>3</td><td><code>material-macro</code></td><td>재료 디테일 매크로 / close-up</td><td>on, hardware 스페큘러</td><td>저녁</td></tr>
-    <tr><td>4</td><td><code>context-night</code></td><td>로우앵글 와이드, 작게 / wide</td><td>dim warm on, 확산광</td><td>밤</td></tr>
+    <tr><td>1</td><td><code>room-3q-day</code></td><td>3/4 establishing, 공간 함께</td><td>off</td><td>밝은 주간 인테리어</td></tr>
+    <tr><td>2</td><td><code>room-front-lit</code></td><td>정면 미디엄, 제품 부각·공간 흐림</td><td>on</td><td>저녁, 따뜻한 글로우</td></tr>
+    <tr><td>3</td><td><code>detail-crop</code></td><td>제품 엣지/표면 디테일, 얕은 심도 (콜라주 금지)</td><td>off</td><td>주간 앰비언트</td></tr>
+    <tr><td>4</td><td><code>angle-low-night</code></td><td>로우/오프셋 앵글, 공간 함께</td><td>on</td><td>야간, 글로우 확산</td></tr>
   </tbody>
 </table>
 
-`N < 4` → 앞에서부터. `N > 4` → 순환하며 접미사. 컷 순서가 곧 하루의 흐름이라, 갤러리를 훑는 행위 자체가 브랜드 가치 *Continuity* 의 체험이 된다.
+`N < 4` → 앞에서부터. `N > 4` → 순환 + 접미사. 모든 컷이 **레퍼런스와 동일한 제품**을 공유하고, 공간은 `product.type` 으로 매핑된다.
 
 ---
 
-## 5요소 템플릿
+## 변주 지시 (텍스트 5블록)
+
+각 컷의 `contents` = `[ 레퍼런스 이미지(inlineData), 변주 지시 텍스트 ]`.
 
 ```
-[Style]       모든 컷 고정. 브랜드 톤(warm minimal, flat & quiet, 3800K 웜 뉴트럴).
-[Subject]     form + glassFinish + hardware. 호출 내 고정.
-[Setting]     product.type → 공간 컨텍스트.
-[Action]      kelvin + lux + lightPattern + 시간대. 컷마다 변동.
-[Composition] 컷 각도·줌 + 고정 카메라(50mm, eye-level, 1:1, rule-of-thirds).
+1) 고정 지시  레퍼런스 제품을 100% 동일하게 유지(재설계 금지). 이 제품을 아래 인테리어에 실제 설치된 모습으로 배치.
+2) Setting    product.type → 인테리어 공간 (space-mapping).
+3) Variation  컷별 각도 · 줌 · 디테일 크롭.
+4) Lighting   off / on. on 이면 kelvin 색온도.
+5) Style      Lumenstate 인테리어 톤(warm minimal, ambient warmth, flat & quiet).
 ```
 
-### 조립 예 (id 17 Lumen Dome, opaline + patina-brass, `material-macro`)
-
-```
-[Subject] A hemisphere desk lamp finished in opaline (milky white) glass with aged
-          patina brass hardware — fixed across every cut.
-[Action]  on, soft specular highlights on the hardware, deep candle-warm amber
-          (~2400-2700K), even glow radiating in every direction. Early evening.
-[Composition] macro detail crop where glass meets hardware, tight close-up. 1:1.
-```
+> 1번(고정 지시)·5번(Style)은 공유 상수. 변하는 건 3번(각도/줌/크롭)·4번(점등)이고, 2번(Setting)은 제품별 고정.
+> 매크로 크롭은 "collage/grid 금지"를 명시하지 않으면 4분할 콜라주가 나온다 — "ONE continuous frame" 유지.
 
 ---
 
-## 매핑 요약
-
-### 공간 (`product.type`)
+## 공간 매핑 (`product.type`)
 
 <table>
   <thead>
-    <tr><th>type</th><th>공간 컨텍스트</th></tr>
+    <tr><th>type</th><th>설치·공간</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>CEILING</code></td><td>차분한 거실·다이닝, 평평한 천장 매입</td></tr>
-    <tr><td><code>STAND</code></td><td>조용한 거실 코너·리딩누크</td></tr>
-    <tr><td><code>WALL</code></td><td>은은한 복도·침실 벽, 면을 스치는 빛</td></tr>
-    <tr><td><code>DESK</code></td><td>정돈된 책상·사이드테이블</td></tr>
+    <tr><td><code>CEILING</code></td><td>거실·다이닝 천장 flush-mount, 아래 낮은 웜톤 가구</td></tr>
+    <tr><td><code>STAND</code></td><td>거실 코너·리딩누크 바닥 스탠딩, 낮은 소파 옆</td></tr>
+    <tr><td><code>WALL</code></td><td>복도·침실 따뜻한 석고 벽 마운트</td></tr>
+    <tr><td><code>DESK</code></td><td>책상·사이드테이블 위, 절제된 소품 옆</td></tr>
   </tbody>
 </table>
 
-### 조명 (`kelvin` / `lux` / `lightPattern`)
+## 조명 색온도 (`kelvin`) — 점등 컷만
 
-- **kelvin** → 색온도 서술 (≤2700K 캔들 엠버 … >4200K 선명한 중성백). 4400K 라도 "차가운 백색"이 아닌 "선명한 중성백".
-- **lux** → 광량 (≤180 intimate · ≤300 comfortable · >300 confident).
-- **lightPattern** → 빛이 퍼지는 형태(downward/halo/omnidirectional/gap/refraction…)를 자연어 시각화로. **글로우 블룸·렌즈 플레어·방향성 드롭섀도는 만들지 않는다**(flat & quiet).
+<table>
+  <thead>
+    <tr><th>범위</th><th>서술</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>≤ 2700K</td><td>deep candle-warm amber</td></tr>
+    <tr><td>≤ 3200K</td><td>warm amber-white</td></tr>
+    <tr><td>≤ 3800K</td><td>brand-signature warm-neutral</td></tr>
+    <tr><td>&gt; 3800K</td><td>balanced → crisp neutral white</td></tr>
+  </tbody>
+</table>
+
+off 컷에는 색온도를 넣지 않는다. 글로우 블룸·렌즈 플레어·방향성 드롭섀도는 만들지 않는다(flat & quiet).
 
 ---
 
 ## Gemini API · 환경 설정
 
 - 모델: `gemini-3.1-flash-image-preview` (Nano Banana 2)
-- 패키지: `@google/genai` — `ai.models.generateContent({ model, contents, config })`
-- `config.imageConfig`: `aspectRatio: '1:1'`, `imageSize: '1K'`
-  - `1024px` 요구는 SDK 값 `'1K'` 에 대응(`1K/2K/4K`). 현재 이 프리뷰 모델은 `imageSize` 를 무시하고 1K 를 반환하는 알려진 이슈(js-genai #1461)가 있으나, 1K ≈ 1024² 라 실용상 무방.
-- 반환: `response.candidates[0].content.parts[].inlineData.data` (base64) → 파일 저장.
+- `ai.models.generateContent({ model, contents: [imagePart, textPart], config })`
+- `config.imageConfig`: `aspectRatio: '1:1'`, `imageSize: '1K'` (1K ≈ 1024²; 프리뷰는 imageSize 무시 — js-genai #1461)
+- ⚠️ `outputMimeType` 은 **Developer API 미지원**(Enterprise 전용) → 넣지 말 것. 모델이 JPEG 를 반환하므로 저장 시 `inlineData.mimeType` 으로 확장자를 맞춘다.
+- 반환: `response.candidates[0].content.parts[].inlineData.{data, mimeType}` (base64).
 
 ### API 키 가이드
 
-1. [aistudio.google.com](https://aistudio.google.com) 에서 키 발급
-2. 프로젝트 루트 `.env.local` 에 `GEMINI_API_KEY=발급키`
-3. `.gitignore` 의 `*.local` 규칙이 `.env.local` 을 제외 (이미 적용됨, 확인만)
-4. `process.env.GEMINI_API_KEY` 참조. **미설정 시 명확한 에러로 즉시 종료**(크레딧·시간 보호)
+1. [aistudio.google.com](https://aistudio.google.com) 발급
+2. 루트 `.env.local` 에 `GEMINI_API_KEY=발급키`
+3. `.gitignore` 의 `*.local` 이 이미 제외
+4. 미설정 시 **명확한 에러로 즉시 종료**
 
 ---
 
 ## 실행
 
 ```bash
-# 1) 프롬프트만 확인 (키·크레딧 불필요)
-node .claude/skills/lumenstate-product-variation/scripts/generate.mjs --product 17 --dry-run
+# 프롬프트만 확인 (키·크레딧 불필요)
+node .claude/skills/lumenstate-product-variation/scripts/generate.mjs --product 1 --dry-run
 
-# 2) 실제 생성
-node .claude/skills/lumenstate-product-variation/scripts/generate.mjs \
-  --product 17 --glass opaline --hardware patina-brass --count 4
-# → generated/lumenstate/17/17-angle-offdim.png … 4장
+# 실제 생성 (4컷 병렬, 1.png 를 레퍼런스로 인테리어에 배치)
+node .claude/skills/lumenstate-product-variation/scripts/generate.mjs --product 1 --count 4
+# → generated/lumenstate/1/1-room-3q-day.jpg … 4장
 ```
 
-실패 모드(의도적 fail-fast): `GEMINI_API_KEY` 미설정 · 패키지 미설치 · 존재하지 않는 id · 허용되지 않는 재료 값 → 안내 메시지 후 즉시 종료.
+실패 모드(fail-fast): `GEMINI_API_KEY` 미설정 · 패키지 미설치 · 존재하지 않는 id · `src/assets/product/{id}.png` 부재 → 안내 후 즉시 종료.

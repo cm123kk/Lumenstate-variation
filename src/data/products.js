@@ -174,6 +174,7 @@ export const products = [
     lux: 150,
     kelvin: 2900,
     images: productAssets[11].images,
+    variations: productAssets[11].variations,
   },
   {
     id: 12,
@@ -198,6 +199,7 @@ export const products = [
     lux: 450,
     kelvin: 4000,
     images: productAssets[13].images,
+    variations: productAssets[13].variations,
   },
   {
     id: 14,

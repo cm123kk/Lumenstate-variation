@@ -8,6 +8,9 @@
 // AspectMedia - 고정 비율 이미지/비디오
 export { default as AspectMedia } from './AspectMedia.jsx';
 
+// ProductVariationGrid - 제품 베리에이션 컷 1xN 그리드
+export { ProductVariationGrid } from './ProductVariationGrid.jsx';
+
 // ImageTransition - 인덱스 기반 이미지 트랜지션
 export { ImageTransition } from './ImageTransition.jsx';
 

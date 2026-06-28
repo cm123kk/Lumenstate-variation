@@ -1,6 +1,8 @@
-# 조명 시각 언어 매핑 (`kelvin` / `lux` / `lightPattern` → Action)
+# 조명 색온도 매핑 (`kelvin` → 점등 글로우)
 
-`scripts/generate.mjs` 의 `describeKelvin` / `describeLux` / `describeLightPattern` 와 짝을 이룬다. 점등(`lit: true`) 컷에서만 광량·색온도·패턴이 들어가고, off 컷은 상태 서술만 쓴다.
+`scripts/generate.mjs` 의 `describeKelvin` 와 짝을 이룬다. **점등(on) 컷에서만** 발광 색온도를 서술하고, off 컷은 색온도를 넣지 않는다.
+
+> 제품의 외형(색·재질·마감)은 레퍼런스 이미지가 정의하고, 배치 공간은 `references/space-mapping.md` 가 정의한다. 여기서 다루는 것은 **점등 시 빛의 색온도**뿐이다. `lux`·`lightPattern` 은 이 스킬에서 사용하지 않는다.
 
 ## kelvin → 발광 색온도
 
@@ -12,37 +14,10 @@
 | ≤ 4200K | balanced near-neutral white (~3900-4200K) |
 | > 4200K | crisp neutral white (~4400K) |
 
-> 브랜드는 디지털 푸른 톤이 아닌 3800K 웜 뉴트럴이 중심(03-visual-direction). 4400K 라도 "차가운 백색"이 아니라 "선명한 중성백"으로 서술한다.
+브랜드는 디지털 푸른 톤이 아닌 3800K 웜 뉴트럴이 중심(03-visual-direction). 4400K 라도 "차가운 백색"이 아니라 "선명한 중성백"으로 서술한다.
 
-## lux → 광량 / 세기
+## flat & quiet 제약
 
-| 범위 | 서술 |
-|---|---|
-| ≤ 180 | low, intimate — 채우기보다 부드럽게 고이는 |
-| ≤ 300 | moderate, comfortable — 은은한 존재감 |
-| > 300 | bright, confident — 자기 영역을 또렷이 정의 |
+on 컷의 글로우는 따뜻하게 빛나되, 03-visual-direction 의 평면성 원칙에 따라 **글로우 블룸·렌즈 플레어·방향성 드롭섀도는 만들지 않는다.** off 컷은 밝은 주간 인테리어, on 컷은 어두운 저녁/야간 인테리어에 따뜻한 글로우가 도는 톤(`{id}-1.png` 의 야간 감각)으로 간다.
 
-## lightPattern → 빛이 퍼지는 형태
-
-products.js 의 `lightPattern` 토큰을 키워드로 풀어 자연어 시각화로 바꾼다(부분 일치):
-
-| 키워드 | 시각화 |
-|---|---|
-| `downward` | 아래로 부드럽게 퍼지는 확산 콘 |
-| `upward-downward` / `dual` | 면을 위아래로 적시는 빛 |
-| `upward` | 벽을 따라 위로 그레이징 |
-| `horizontal` | 옆으로 퍼지는 수평 띠 |
-| `perimeter` / `halo` | 둘레를 감싸는 부드러운 헤일로 |
-| `omnidirectional` | 사방으로 균일하게 방사 |
-| `vertical` | 키 큰 수직 패널의 균일광 |
-| `radiate` / `four-directional` | 여러 방향으로 방사 |
-| `gap` / `emission` | 좁은 갭에서 새어나오는 가는 빛 줄 |
-| `refraction` / `prism` | 희미한 기하 패싯으로 굴절 |
-| `spot` | 아래 면에 맺히는 집중 풀 |
-| (그 외) | 부드러운 균일 확산 |
-
-## flat & quiet 제약 재확인
-
-서술은 빛의 **형태·색온도·세기**를 묘사하되, 03-visual-direction 의 평면성 원칙에 따라 **글로우 블룸·렌즈 플레어·방향성 드롭섀도는 만들지 않는다.** 그림자는 "떨어지는" 것이 아니라 "빛이 감싸는" 확산광이어야 한다.
-
-> 매핑 추가/수정 시: products.js 에 새 `lightPattern` 토큰이 생기면 여기와 `describeLightPattern` 양쪽에 키워드를 추가한다.
+> 매핑 수정 시: `describeKelvin` 와 이 표를 함께 고친다.

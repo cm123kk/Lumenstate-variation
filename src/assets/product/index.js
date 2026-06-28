@@ -40,6 +40,20 @@ import product19_1 from './19-1.png';
 import product20 from './20.png';
 import product20_1 from './20-1.png';
 
+// Product 11 variation cuts (skill: lumenstate-product-variation, image-to-image from 11.png)
+import product11_var1 from './variations/11/11-room-wide-day.jpg';
+import product11_var2 from './variations/11/11-room-front-lit.jpg';
+import product11_var3 from './variations/11/11-detail-crop.jpg';
+import product11_var4 from './variations/11/11-angle-low-night.jpg';
+import product11_var5 from './variations/11/11-lifestyle-person.jpg';
+
+// Product 13 variation cuts (skill: lumenstate-product-variation, image-to-image from 13.png)
+import product13_var1 from './variations/13/13-room-wide-day.jpg';
+import product13_var2 from './variations/13/13-room-front-lit.jpg';
+import product13_var3 from './variations/13/13-detail-crop.jpg';
+import product13_var4 from './variations/13/13-angle-low-night.jpg';
+import product13_var5 from './variations/13/13-lifestyle-person.jpg';
+
 // Export organized by product
 export const productAssets = {
   1: { images: [product1, product1_1] },
@@ -52,9 +66,27 @@ export const productAssets = {
   8: { images: [product8, product8_1] },
   9: { images: [product9, product9_1] },
   10: { images: [product10, product10_1] },
-  11: { images: [product11, product11_1] },
+  11: {
+    images: [product11, product11_1],
+    variations: [
+      product11_var1,
+      product11_var2,
+      product11_var3,
+      product11_var4,
+      product11_var5,
+    ],
+  },
   12: { images: [product12, product12_1] },
-  13: { images: [product13, product13_1] },
+  13: {
+    images: [product13, product13_1],
+    variations: [
+      product13_var1,
+      product13_var2,
+      product13_var3,
+      product13_var4,
+      product13_var5,
+    ],
+  },
   14: { images: [product14, product14_1] },
   15: { images: [product15, product15_1] },
   16: { images: [product16, product16_1] },

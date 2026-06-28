@@ -89,3 +89,19 @@ export const NoMeta = {
     currency: 'USD',
   },
 };
+
+/** 베리에이션 컷 갤러리 (Lumen Mini, 대표 제품 하단 1x5 그리드) */
+export const WithVariations = {
+  args: {
+    product: {
+      ...products[10],
+      price: 320,
+    },
+    meta: {
+      itemNumber: 'LM-011',
+      leadTime: '2 Weeks',
+      shipDate: 'Jan 12, 2025',
+    },
+    currency: 'USD',
+  },
+};
